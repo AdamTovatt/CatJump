@@ -33,6 +33,7 @@ namespace CatJump
 
             Animation dogAnimation = new Animation(new List<Texture2D>() { Content.Load<Texture2D>("sprite_0"), Content.Load<Texture2D>("sprite_1") });
             dog = new GameObject(dogAnimation);
+            dog.UseGravity = true;
         }
 
         protected override void Update(GameTime gameTime)
@@ -51,7 +52,7 @@ namespace CatJump
 
             _spriteBatch.Begin();
             if (dog.Visible)
-                _spriteBatch.Draw(dog.CurrentSprite, new Vector2(0, 0), Color.White);
+                _spriteBatch.Draw(dog.CurrentSprite, dog.Position, Color.White);
             _spriteBatch.End();
 
             base.Draw(gameTime);
