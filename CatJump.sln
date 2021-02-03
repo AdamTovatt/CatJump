@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30717.126
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatJump", "CatJump\CatJump.csproj", "{058E6A5A-72BA-4B48-907F-F19DBA6838DC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{058E6A5A-72BA-4B48-907F-F19DBA6838DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{058E6A5A-72BA-4B48-907F-F19DBA6838DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{058E6A5A-72BA-4B48-907F-F19DBA6838DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{058E6A5A-72BA-4B48-907F-F19DBA6838DC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A4FC293A-740B-494D-A56A-1B7C83280863}
+	EndGlobalSection
+EndGlobal
