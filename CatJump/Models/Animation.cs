@@ -43,5 +43,15 @@ namespace CatJump.Models
         {
             return sprites[currentFrame];
         }
+
+        public Rectangle FindBoundingBox()
+        {
+            if (sprites.Count == 0)
+                return Rectangle.Empty;
+
+            Texture2D sprite = sprites[0];
+
+            throw new NotImplementedException();
+        }
     }
 }
