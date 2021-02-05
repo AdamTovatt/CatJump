@@ -11,9 +11,8 @@ namespace CatJump.Models
         public bool Visible { get; set; } = true;
         public bool UseGravity { get; set; }
         public Texture2D CurrentSprite { get { return animation.GetCurrentFrame(); } }
-        public Rectangle BoundingBox { get { return GetBoundingBox(); } }
-        private Rectangle _boundingBox;
-        private Vector2 boundingBoxSize;
+        public BoundingBox BoundingBox { get { return GetBoundingBox(); } }
+        private BoundingBox _boundingBox;
         public Vector2 Velocity { get; set; }
         public Vector2 Position { get; set; }
         public Vector2 SpritePosition { get { return Position - Origin; } }
@@ -35,18 +34,14 @@ namespace CatJump.Models
         {
             this.animation = animation;
             Position = position;
-            boundingBoxSize = new Vector2(100, 100);
-            Origin = new Vector2(boundingBoxSize.X / 2, boundingBoxSize.Y / 2);
-            _boundingBox = new Rectangle();
-            _boundingBox.Width = (int)boundingBoxSize.X;
-            _boundingBox.Height = (int)boundingBoxSize.Y;
+            _boundingBox = BoundingBox.FromAnimation(animation);
+            Origin = new Vector2(_boundingBox.Rectangle.Width / 2 + _boundingBox.Offset.X / 2, _boundingBox.Rectangle.Height / 2 + _boundingBox.Offset.Y / 2);
         }
 
-        private Rectangle GetBoundingBox()
+        private BoundingBox GetBoundingBox()
         {
-            Vector2 cornerPosition = Position - Origin;
-            _boundingBox.X = (int)cornerPosition.X;
-            _boundingBox.Y = (int)cornerPosition.Y;
+            Point newPosition = new Point((int)SpritePosition.X + _boundingBox.Offset.X, (int)SpritePosition.Y + _boundingBox.Offset.Y);
+            _boundingBox.Rectangle = new Rectangle(newPosition, _boundingBox.Rectangle.Size);
             return _boundingBox;
         }
 

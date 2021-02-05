@@ -37,7 +37,7 @@ namespace CatJump
 
             Animation dogAnimation = new Animation(new List<Texture2D>() { Content.Load<Texture2D>("sprite_0"), Content.Load<Texture2D>("sprite_1") });
             dog = new GameObject(dogAnimation);
-            dog.UseGravity = true;
+            dog.UseGravity = false;
             dog.Position = new Vector2(100, 100);
         }
 
@@ -59,7 +59,7 @@ namespace CatJump
             if (dog.Visible)
             {
                 _spriteBatch.Draw(dog.CurrentSprite, dog.SpritePosition, Color.White);
-                DrawBorder(_spriteBatch, dog.BoundingBox, 2, Color.White);
+                DrawBorder(_spriteBatch, dog.BoundingBox.Rectangle, 2, Color.White);
                 _spriteBatch.Draw(pixel, dog.Position, Color.White);
             }
             _spriteBatch.End();

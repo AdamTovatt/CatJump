@@ -11,15 +11,15 @@ namespace CatJump.Models
         public bool Playing { get; set; } = true;
         public double FrameRate { get { return frameRate; } set { frameDelay = 1000 / value; frameRate = value; } }
         private double frameRate = 16;
+        public List<Texture2D> Sprites { get; private set; }
 
-        private List<Texture2D> sprites;
         private int currentFrame = 0;
         private double passedTime = 0;
         private double frameDelay = 1000 / 16;
 
         public Animation(List<Texture2D> sprites)
         {
-            this.sprites = sprites;
+            this.Sprites = sprites;
         }
 
         public void Update(GameTime time)
@@ -28,7 +28,7 @@ namespace CatJump.Models
             {
                 passedTime = 0;
                 currentFrame++;
-                if (currentFrame >= sprites.Count)
+                if (currentFrame >= Sprites.Count)
                 {
                     currentFrame = 0;
                 }
@@ -41,17 +41,7 @@ namespace CatJump.Models
 
         public Texture2D GetCurrentFrame()
         {
-            return sprites[currentFrame];
-        }
-
-        public Rectangle FindBoundingBox()
-        {
-            if (sprites.Count == 0)
-                return Rectangle.Empty;
-
-            Texture2D sprite = sprites[0];
-
-            throw new NotImplementedException();
+            return Sprites[currentFrame];
         }
     }
 }
