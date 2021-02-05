@@ -44,10 +44,13 @@ namespace CatJump
             GameObject dog = new GameObject(dogAnimation);
             dog.UseGravity = true;
             dog.Position = new Vector2(100, 100);
+            dog.UseCollisions = true;
+            dog.OnCollision += (collision) => { dog.Velocity = new Vector2(dog.Velocity.X, dog.Velocity.Y * -1); };
 
             Graphic blockAnimation = new Graphic(Content.Load<Texture2D>("block_1"));
             GameObject block = new GameObject(blockAnimation);
-            block.Position = new Vector2(80, 400);
+            block.Position = new Vector2(80, 300);
+            block.UseCollisions = true;
 
             world.AddObject(dog);
             world.AddObject(block);

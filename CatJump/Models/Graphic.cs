@@ -45,7 +45,7 @@ namespace CatJump.Models
             }
         }
 
-        public Texture2D GetCurrentFrame()
+        public Texture2D GetCurrentSprite()
         {
             return Sprites[currentFrame];
         }

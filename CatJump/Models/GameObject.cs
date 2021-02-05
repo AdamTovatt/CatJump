@@ -10,7 +10,8 @@ namespace CatJump.Models
     {
         public bool Visible { get; set; } = true;
         public bool UseGravity { get; set; }
-        public Texture2D CurrentSprite { get { return animation.GetCurrentFrame(); } }
+        public bool UseCollisions { get; set; }
+        public Texture2D CurrentSprite { get { return graphic.GetCurrentSprite(); } }
         public BoundingBox BoundingBox { get { return GetBoundingBox(); } }
         private BoundingBox _boundingBox;
         public Vector2 Velocity { get; set; }
@@ -18,23 +19,27 @@ namespace CatJump.Models
         public Vector2 SpritePosition { get { return Position - Origin; } }
         public Vector2 Origin { get; private set; }
 
-        private Graphic animation;
+        public delegate void Collided(Collision collision);
+        public event Collided OnCollision;
+
+        private World world;
+        private Graphic graphic;
 
         public GameObject(Texture2D sprite, Vector2 position = default(Vector2))
         {
             Init(new Graphic(new List<Texture2D>() { sprite }), position);
         }
 
-        public GameObject(Graphic animation, Vector2 position = default(Vector2))
+        public GameObject(Graphic graphic, Vector2 position = default(Vector2))
         {
-            Init(animation, position);
+            Init(graphic, position);
         }
 
-        private void Init(Graphic animation, Vector2 position)
+        private void Init(Graphic graphic, Vector2 position)
         {
-            this.animation = animation;
+            this.graphic = graphic;
             Position = position;
-            _boundingBox = BoundingBox.FromAnimation(animation);
+            _boundingBox = BoundingBox.FromAnimation(graphic);
             Origin = new Vector2(_boundingBox.Rectangle.Width / 2 + _boundingBox.Offset.X / 2, _boundingBox.Rectangle.Height / 2 + _boundingBox.Offset.Y / 2);
         }
 
@@ -47,7 +52,7 @@ namespace CatJump.Models
 
         public void Update(GameTime time)
         {
-            animation.Update(time);
+            graphic.Update(time);
 
             if (UseGravity)
             {
@@ -55,6 +60,38 @@ namespace CatJump.Models
             }
 
             Position += Velocity;
+
+            if (UseCollisions && world != null && OnCollision != null) //check for collisions
+            {
+                foreach (GameObject gameObject in world.Objects)
+                {
+                    if (gameObject != this)
+                    {
+                        if (gameObject.UseCollisions)
+                        {
+                            int xMin = gameObject.BoundingBox.Rectangle.Height / 2 + BoundingBox.Rectangle.Height / 2;
+                            int yMin = gameObject.BoundingBox.Rectangle.Width / 2 + BoundingBox.Rectangle.Width / 2;
+
+                            Point distance = gameObject.BoundingBox.Rectangle.Center - BoundingBox.Rectangle.Center;
+
+                            if (distance.X < xMin && distance.Y < yMin)
+                            {
+                                OnCollision.Invoke(new Collision(gameObject, true, true, true, true));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public void AssignWorld(World world)
+        {
+            this.world = world;
+        }
+
+        public void RemoveWorld()
+        {
+            this.world = null;
         }
     }
 }
