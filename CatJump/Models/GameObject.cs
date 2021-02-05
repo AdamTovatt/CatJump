@@ -18,19 +18,19 @@ namespace CatJump.Models
         public Vector2 SpritePosition { get { return Position - Origin; } }
         public Vector2 Origin { get; private set; }
 
-        private Animation animation;
+        private Graphic animation;
 
         public GameObject(Texture2D sprite, Vector2 position = default(Vector2))
         {
-            Init(new Animation(new List<Texture2D>() { sprite }), position);
+            Init(new Graphic(new List<Texture2D>() { sprite }), position);
         }
 
-        public GameObject(Animation animation, Vector2 position = default(Vector2))
+        public GameObject(Graphic animation, Vector2 position = default(Vector2))
         {
             Init(animation, position);
         }
 
-        private void Init(Animation animation, Vector2 position)
+        private void Init(Graphic animation, Vector2 position)
         {
             this.animation = animation;
             Position = position;

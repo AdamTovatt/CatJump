@@ -6,9 +6,9 @@ using System.Text;
 
 namespace CatJump.Models
 {
-    public class Animation
+    public class Graphic
     {
-        public bool Playing { get; set; } = true;
+        public bool Animated { get; set; } = true;
         public double FrameRate { get { return frameRate; } set { frameDelay = 1000 / value; frameRate = value; } }
         private double frameRate = 16;
         public List<Texture2D> Sprites { get; private set; }
@@ -17,9 +17,15 @@ namespace CatJump.Models
         private double passedTime = 0;
         private double frameDelay = 1000 / 16;
 
-        public Animation(List<Texture2D> sprites)
+        public Graphic(List<Texture2D> sprites)
         {
-            this.Sprites = sprites;
+            Sprites = sprites;
+        }
+
+        public Graphic(Texture2D sprite)
+        {
+            Sprites = new List<Texture2D>() { sprite };
+            Animated = false;
         }
 
         public void Update(GameTime time)

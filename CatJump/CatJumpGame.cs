@@ -1,4 +1,5 @@
-﻿using CatJump.Models;
+﻿using CatJump.ExtensionMethods;
+using CatJump.Models;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -8,11 +9,12 @@ namespace CatJump
 {
     public class CatJumpGame : Game
     {
+        public static Texture2D pixel;
+
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        private Texture2D pixel;
-        private GameObject dog;
+        private World world;
 
         public CatJumpGame()
         {
@@ -28,6 +30,9 @@ namespace CatJump
             pixel = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             pixel.SetData(new[] { Color.White });
 
+            world = new World();
+            world.DrawDebug = true;
+
             base.Initialize();
         }
 
@@ -35,10 +40,17 @@ namespace CatJump
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            Animation dogAnimation = new Animation(new List<Texture2D>() { Content.Load<Texture2D>("sprite_0"), Content.Load<Texture2D>("sprite_1") });
-            dog = new GameObject(dogAnimation);
-            dog.UseGravity = false;
+            Graphic dogAnimation = new Graphic(new List<Texture2D>() { Content.Load<Texture2D>("sprite_0"), Content.Load<Texture2D>("sprite_1") });
+            GameObject dog = new GameObject(dogAnimation);
+            dog.UseGravity = true;
             dog.Position = new Vector2(100, 100);
+
+            Graphic blockAnimation = new Graphic(Content.Load<Texture2D>("block_1"));
+            GameObject block = new GameObject(blockAnimation);
+            block.Position = new Vector2(80, 400);
+
+            world.AddObject(dog);
+            world.AddObject(block);
         }
 
         protected override void Update(GameTime gameTime)
@@ -46,7 +58,10 @@ namespace CatJump
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            dog.Update(gameTime);
+            foreach (GameObject gameObject in world.Objects)
+            {
+                gameObject.Update(gameTime);
+            }
 
             base.Update(gameTime);
         }
@@ -56,23 +71,21 @@ namespace CatJump
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin();
-            if (dog.Visible)
+            foreach (GameObject gameObject in world.Objects)
             {
-                _spriteBatch.Draw(dog.CurrentSprite, dog.SpritePosition, Color.White);
-                DrawBorder(_spriteBatch, dog.BoundingBox.Rectangle, 2, Color.White);
-                _spriteBatch.Draw(pixel, dog.Position, Color.White);
+                if (gameObject.Visible)
+                {
+                    _spriteBatch.Draw(gameObject.CurrentSprite, gameObject.SpritePosition, Color.White);
+                    if (world.DrawDebug)
+                    {
+                        _spriteBatch.DrawBorder(gameObject.BoundingBox.Rectangle, 2, Color.White);
+                        _spriteBatch.Draw(pixel, gameObject.Position, Color.White);
+                    }
+                }
             }
             _spriteBatch.End();
 
             base.Draw(gameTime);
-        }
-
-        private void DrawBorder(SpriteBatch spriteBatch, Rectangle rectangleToDraw, int thicknessOfBorder, Color borderColor)
-        {
-            spriteBatch.Draw(pixel, new Rectangle(rectangleToDraw.X, rectangleToDraw.Y, rectangleToDraw.Width, thicknessOfBorder), borderColor);
-            spriteBatch.Draw(pixel, new Rectangle(rectangleToDraw.X, rectangleToDraw.Y, thicknessOfBorder, rectangleToDraw.Height), borderColor);
-            spriteBatch.Draw(pixel, new Rectangle((rectangleToDraw.X + rectangleToDraw.Width - thicknessOfBorder),rectangleToDraw.Y,thicknessOfBorder,rectangleToDraw.Height), borderColor);
-            spriteBatch.Draw(pixel, new Rectangle(rectangleToDraw.X,rectangleToDraw.Y + rectangleToDraw.Height - thicknessOfBorder,rectangleToDraw.Width,thicknessOfBorder), borderColor);
         }
     }
 }
