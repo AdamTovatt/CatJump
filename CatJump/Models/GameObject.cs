@@ -24,6 +24,7 @@ namespace CatJump.Models
 
         private World world;
         private Graphic graphic;
+        private Rectangle previousPosition;
 
         public GameObject() { }
 
@@ -32,6 +33,7 @@ namespace CatJump.Models
             this.graphic = graphic;
             Position = position;
             _boundingBox = BoundingBox.FromGraphic(graphic);
+            previousPosition = BoundingBox.Rectangle;
             Origin = new Vector2(_boundingBox.Rectangle.Width / 2 + _boundingBox.Offset.X, _boundingBox.Rectangle.Height / 2 + _boundingBox.Offset.Y);
         }
 
@@ -51,24 +53,45 @@ namespace CatJump.Models
                 Velocity += new Vector2(0, 9.82f * (float)time.ElapsedGameTime.TotalSeconds);
             }
 
+            int oldLeft = (int)previousPosition.X;
+            int oldRight = (int)previousPosition.X + BoundingBox.Rectangle.Width;
+            int oldTop = (int)previousPosition.Y + BoundingBox.Offset.Y;
+            int oldBottom = (int)previousPosition.Y + BoundingBox.Rectangle.Height;
+
+            previousPosition = BoundingBox.Rectangle;
             Position += Velocity;
 
             if (UseCollisions && world != null && OnCollision != null) //check for collisions
             {
-                foreach (GameObject gameObject in world.Objects)
+                foreach (GameObject otherObject in world.Objects)
                 {
-                    if (gameObject != this)
+                    if (otherObject != this)
                     {
-                        if (gameObject.UseCollisions)
+                        if (otherObject.UseCollisions)
                         {
-                            int xMin = gameObject.BoundingBox.Rectangle.Width / 2 + BoundingBox.Rectangle.Width / 2;
-                            int yMin = gameObject.BoundingBox.Rectangle.Height / 2 + BoundingBox.Rectangle.Height / 2;
+                            int xMinSeparation = otherObject.BoundingBox.Rectangle.Width / 2 + BoundingBox.Rectangle.Width / 2;
+                            int yMinSeparation = otherObject.BoundingBox.Rectangle.Height / 2 + BoundingBox.Rectangle.Height / 2;
+                            
+                            int otherLeft = otherObject.BoundingBox.Rectangle.X;
+                            int otherRight = otherObject.BoundingBox.Rectangle.X + otherObject.BoundingBox.Rectangle.Width;
+                            int otherTop = otherObject.BoundingBox.Rectangle.Y;
+                            int otherBottom = otherObject.BoundingBox.Rectangle.Y + otherObject.BoundingBox.Rectangle.Height;
 
-                            Point distance = gameObject.BoundingBox.Rectangle.Center - BoundingBox.Rectangle.Center;
+                            int left = (int)BoundingBox.Rectangle.X;
+                            int right = (int)BoundingBox.Rectangle.X + BoundingBox.Rectangle.Width;
+                            int top = (int)BoundingBox.Rectangle.Y;
+                            int bottom = (int)BoundingBox.Rectangle.Y + BoundingBox.Rectangle.Height;
 
-                            if (distance.X < xMin && distance.Y < yMin)
+                            bool collidedFromLeft = oldRight <= otherLeft && right > otherLeft;
+                            bool collidedFromRight = oldLeft >= otherRight && left < otherRight;
+                            bool collidedFromTop = oldBottom <= otherTop && bottom > otherTop;
+                            bool collidedFromBottom = oldTop >= otherBottom && top < otherBottom;
+
+                            Point distance = otherObject.BoundingBox.Rectangle.Center - BoundingBox.Rectangle.Center;
+
+                            if (Math.Abs(distance.X) < xMinSeparation && Math.Abs(distance.Y) < yMinSeparation)
                             {
-                                OnCollision.Invoke(new Collision(gameObject, true, true, true, true));
+                                OnCollision.Invoke(new Collision(otherObject, collidedFromTop, collidedFromBottom, collidedFromLeft, collidedFromRight));
                             }
                         }
                     }

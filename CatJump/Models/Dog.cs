@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,12 +16,13 @@ namespace CatJump.Models
             UseCollisions = true;
             UseGravity = true;
 
-            OnCollision += (collision) => { Velocity = new Vector2(Velocity.X, -8); };
+            OnCollision += (collision) => { if(collision.Top) Velocity = new Vector2(Velocity.X, -8); };
         }
 
         public override void CustomUpdate(GameTime time)
         {
-            
+            MouseState state =  Mouse.GetState();
+            Position = new Vector2(state.X, Position.Y);
         }
     }
 }

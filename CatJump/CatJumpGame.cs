@@ -40,6 +40,8 @@ namespace CatJump
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            IsMouseVisible = false;
+
             GameObject dog = new Dog(Content, new Vector2(100, 100));
 
             world.AddObject(dog);
