@@ -9,12 +9,16 @@ namespace CatJump
 {
     public class CatJumpGame : Game
     {
+        public static int ScreenWidth;
+        public static int ScreenHeight;
         public static Texture2D pixel;
 
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        private Camera camera;
         private World world;
+        private Dog player;
 
         public CatJumpGame()
         {
@@ -25,6 +29,9 @@ namespace CatJump
 
         protected override void Initialize()
         {
+            ScreenHeight = _graphics.PreferredBackBufferHeight;
+            ScreenWidth = _graphics.PreferredBackBufferWidth;
+
             pixel = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             pixel.SetData(new[] { Color.White });
 
@@ -38,9 +45,12 @@ namespace CatJump
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            camera = new Camera() { LockX = true };
+
             IsMouseVisible = false;
 
-            world.AddObject(new Dog(Content, new Vector2(100, 100)));
+            player = new Dog(Content, new Vector2(100, 100));
+            world.AddObject(player);
             world.AddObject(new Block(Content, new Vector2(80, 300)));
             world.AddObject(new Block(Content, new Vector2(200, 350)));
             world.AddObject(new Block(Content, new Vector2(600, 200)));
@@ -57,6 +67,8 @@ namespace CatJump
                 gameObject.CustomUpdate(gameTime);
             }
 
+            camera.Follow(player);
+
             base.Update(gameTime);
         }
 
@@ -64,7 +76,8 @@ namespace CatJump
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(transformMatrix: camera.Transform);
+
             foreach (GameObject gameObject in world.Objects)
             {
                 if (gameObject.Visible)
@@ -77,6 +90,7 @@ namespace CatJump
                     }
                 }
             }
+
             _spriteBatch.End();
 
             base.Draw(gameTime);

@@ -14,11 +14,10 @@ namespace CatJump.Models
             Objects = new List<GameObject>();
         }
 
-        public GameObject AddObject(GameObject gameObject)
+        public void AddObject(GameObject gameObject)
         {
             gameObject.AssignWorld(this);
             Objects.Add(gameObject);
-            return gameObject;
         }
 
         public void RemoveObject(GameObject gameObject)
