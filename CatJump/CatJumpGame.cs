@@ -41,19 +41,11 @@ namespace CatJump
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             GameObject dog = new Dog(Content, new Vector2(100, 100));
-            dog.UseGravity = true;
-            dog.UseCollisions = true;
-            dog.OnCollision += (collision) => { dog.Velocity = new Vector2(dog.Velocity.X, -8); };
-
-            Graphic blockAnimation = new Graphic(Content.Load<Texture2D>("block_1"));
-            GameObject block = new GameObject(blockAnimation);
-            block.Position = new Vector2(80, 300);
-            block.UseCollisions = true;
 
             world.AddObject(dog);
-            world.AddObject(new GameObject(blockAnimation) { Position = new Vector2(80, 300), UseCollisions = true });
-            world.AddObject(new GameObject(blockAnimation) { Position = new Vector2(200, 350), UseCollisions = true });
-            world.AddObject(new GameObject(blockAnimation) { Position = new Vector2(600, 200), UseCollisions = true });
+            world.AddObject(new Block(Content, new Vector2(80, 300)));
+            world.AddObject(new Block(Content, new Vector2(200, 350)));
+            world.AddObject(new Block(Content, new Vector2(600, 200)));
         }
 
         protected override void Update(GameTime gameTime)
@@ -64,6 +56,7 @@ namespace CatJump
             foreach (GameObject gameObject in world.Objects)
             {
                 gameObject.Update(gameTime);
+                gameObject.CustomUpdate(gameTime);
             }
 
             base.Update(gameTime);

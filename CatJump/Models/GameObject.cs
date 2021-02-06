@@ -6,7 +6,7 @@ using System.Text;
 
 namespace CatJump.Models
 {
-    public class GameObject
+    public abstract class GameObject
     {
         public bool Visible { get; set; } = true;
         public bool UseGravity { get; set; }
@@ -25,20 +25,7 @@ namespace CatJump.Models
         private World world;
         private Graphic graphic;
 
-        /// <summary>
-        /// Empty constructor, don't use this unless you know what you are doing please, you will get errors
-        /// </summary>
         public GameObject() { }
-
-        public GameObject(Texture2D sprite, Vector2 position = default(Vector2))
-        {
-            Init(new Graphic(new List<Texture2D>() { sprite }), position);
-        }
-
-        public GameObject(Graphic graphic, Vector2 position = default(Vector2))
-        {
-            Init(graphic, position);
-        }
 
         protected void Init(Graphic graphic, Vector2 position)
         {
@@ -89,7 +76,7 @@ namespace CatJump.Models
             }
         }
 
-        public virtual void CustomUpdate(GameTime time) { }
+        public abstract void CustomUpdate(GameTime time);
 
         public void AssignWorld(World world)
         {
