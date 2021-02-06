@@ -25,8 +25,6 @@ namespace CatJump
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             pixel = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             pixel.SetData(new[] { Color.White });
 
@@ -42,9 +40,7 @@ namespace CatJump
 
             IsMouseVisible = false;
 
-            GameObject dog = new Dog(Content, new Vector2(100, 100));
-
-            world.AddObject(dog);
+            world.AddObject(new Dog(Content, new Vector2(100, 100)));
             world.AddObject(new Block(Content, new Vector2(80, 300)));
             world.AddObject(new Block(Content, new Vector2(200, 350)));
             world.AddObject(new Block(Content, new Vector2(600, 200)));
