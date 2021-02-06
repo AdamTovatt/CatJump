@@ -19,7 +19,7 @@ namespace CatJump.Models
             Rectangle.Offset(new Point(-1 * Offset.X, -1 * Offset.Y));
         }
 
-        public static BoundingBox FromAnimation(Graphic animation)
+        public static BoundingBox FromGraphic(Graphic animation)
         {
             if (animation.Sprites.Count == 0)
                 return null;

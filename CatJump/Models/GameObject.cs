@@ -25,6 +25,11 @@ namespace CatJump.Models
         private World world;
         private Graphic graphic;
 
+        /// <summary>
+        /// Empty constructor, don't use this unless you know what you are doing please, you will get errors
+        /// </summary>
+        public GameObject() { }
+
         public GameObject(Texture2D sprite, Vector2 position = default(Vector2))
         {
             Init(new Graphic(new List<Texture2D>() { sprite }), position);
@@ -35,12 +40,12 @@ namespace CatJump.Models
             Init(graphic, position);
         }
 
-        private void Init(Graphic graphic, Vector2 position)
+        protected void Init(Graphic graphic, Vector2 position)
         {
             this.graphic = graphic;
             Position = position;
-            _boundingBox = BoundingBox.FromAnimation(graphic);
-            Origin = new Vector2(_boundingBox.Rectangle.Width / 2 + _boundingBox.Offset.X / 2, _boundingBox.Rectangle.Height / 2 + _boundingBox.Offset.Y / 2);
+            _boundingBox = BoundingBox.FromGraphic(graphic);
+            Origin = new Vector2(_boundingBox.Rectangle.Width / 2 + _boundingBox.Offset.X, _boundingBox.Rectangle.Height / 2 + _boundingBox.Offset.Y);
         }
 
         private BoundingBox GetBoundingBox()
@@ -69,8 +74,8 @@ namespace CatJump.Models
                     {
                         if (gameObject.UseCollisions)
                         {
-                            int xMin = gameObject.BoundingBox.Rectangle.Height / 2 + BoundingBox.Rectangle.Height / 2;
-                            int yMin = gameObject.BoundingBox.Rectangle.Width / 2 + BoundingBox.Rectangle.Width / 2;
+                            int xMin = gameObject.BoundingBox.Rectangle.Width / 2 + BoundingBox.Rectangle.Width / 2;
+                            int yMin = gameObject.BoundingBox.Rectangle.Height / 2 + BoundingBox.Rectangle.Height / 2;
 
                             Point distance = gameObject.BoundingBox.Rectangle.Center - BoundingBox.Rectangle.Center;
 
@@ -83,6 +88,8 @@ namespace CatJump.Models
                 }
             }
         }
+
+        public virtual void CustomUpdate(GameTime time) { }
 
         public void AssignWorld(World world)
         {

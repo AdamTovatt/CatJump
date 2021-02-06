@@ -31,7 +31,7 @@ namespace CatJump
             pixel.SetData(new[] { Color.White });
 
             world = new World();
-            world.DrawDebug = true;
+            world.DrawDebug = false;
 
             base.Initialize();
         }
@@ -40,12 +40,10 @@ namespace CatJump
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            Graphic dogAnimation = new Graphic(new List<Texture2D>() { Content.Load<Texture2D>("sprite_0"), Content.Load<Texture2D>("sprite_1") });
-            GameObject dog = new GameObject(dogAnimation);
+            GameObject dog = new Dog(Content, new Vector2(100, 100));
             dog.UseGravity = true;
-            dog.Position = new Vector2(100, 100);
             dog.UseCollisions = true;
-            dog.OnCollision += (collision) => { dog.Velocity = new Vector2(dog.Velocity.X, dog.Velocity.Y * -1); };
+            dog.OnCollision += (collision) => { dog.Velocity = new Vector2(dog.Velocity.X, -8); };
 
             Graphic blockAnimation = new Graphic(Content.Load<Texture2D>("block_1"));
             GameObject block = new GameObject(blockAnimation);
@@ -53,7 +51,9 @@ namespace CatJump
             block.UseCollisions = true;
 
             world.AddObject(dog);
-            world.AddObject(block);
+            world.AddObject(new GameObject(blockAnimation) { Position = new Vector2(80, 300), UseCollisions = true });
+            world.AddObject(new GameObject(blockAnimation) { Position = new Vector2(200, 350), UseCollisions = true });
+            world.AddObject(new GameObject(blockAnimation) { Position = new Vector2(600, 200), UseCollisions = true });
         }
 
         protected override void Update(GameTime gameTime)
