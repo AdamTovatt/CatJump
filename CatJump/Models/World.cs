@@ -13,7 +13,7 @@ namespace CatJump.Models
         public ContentManager ContentManager { get; private set; }
         public bool DrawDebug { get; set; }
         public int ScreenHeight { get; set; }
-        public int BlockSeparation { get; set; } = 100;
+        public int BlockSeparation { get; set; } = 200;
         public int ScreenWidth { get; private set; }
         public float GravityMultiplier { get; set; }
 
