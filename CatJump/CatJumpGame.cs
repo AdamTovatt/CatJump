@@ -3,6 +3,8 @@ using CatJump.Models;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Myra;
+using Myra.Graphics2D.UI;
 using System.Collections.Generic;
 
 namespace CatJump
@@ -13,12 +15,15 @@ namespace CatJump
         public static int ScreenHeight;
         public static Texture2D pixel;
 
+        public Desktop Desktop { get; set; }
+
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
         private Camera camera;
         private World world;
         private Dog player;
+        private Color backgroundColor;
 
         public CatJumpGame()
         {
@@ -38,11 +43,15 @@ namespace CatJump
             world = new World(Content, ScreenWidth, ScreenHeight, 2);
             world.DrawDebug = false;
 
+            backgroundColor = BackgroundColor.GetColor(0);
+
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
+            //UserInterface.Create(this);
+            
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             camera = new Camera() { LockX = true };
@@ -68,12 +77,14 @@ namespace CatJump
 
             camera.Follow(player);
 
+            backgroundColor = BackgroundColor.GetColor(player.Position.Y);
+
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(backgroundColor);
 
             _spriteBatch.Begin(transformMatrix: camera.Transform);
 
@@ -91,6 +102,8 @@ namespace CatJump
                     }
                 }
             }
+
+            Desktop.Render();
 
             _spriteBatch.End();
 
