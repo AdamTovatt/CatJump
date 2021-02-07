@@ -22,7 +22,7 @@ namespace CatJump.Models
         public delegate void Collided(Collision collision);
         public event Collided OnCollision;
 
-        private World world;
+        protected World world;
         private Graphic graphic;
         private Rectangle previousPosition;
 
@@ -50,7 +50,7 @@ namespace CatJump.Models
 
             if (UseGravity)
             {
-                Velocity += new Vector2(0, 9.82f * (float)time.ElapsedGameTime.TotalSeconds);
+                Velocity += new Vector2(0, world.GravityMultiplier * 9.82f * (float)time.ElapsedGameTime.TotalSeconds);
             }
 
             int oldLeft = (int)previousPosition.X;
@@ -63,15 +63,16 @@ namespace CatJump.Models
 
             if (UseCollisions && world != null && OnCollision != null) //check for collisions
             {
-                foreach (GameObject otherObject in world.Objects)
+                for (int i = 0; i < world.Objects.Count; i++)
                 {
+                    GameObject otherObject = world.Objects[i];
                     if (otherObject != this)
                     {
                         if (otherObject.UseCollisions)
                         {
                             int xMinSeparation = otherObject.BoundingBox.Rectangle.Width / 2 + BoundingBox.Rectangle.Width / 2;
                             int yMinSeparation = otherObject.BoundingBox.Rectangle.Height / 2 + BoundingBox.Rectangle.Height / 2;
-                            
+
                             int otherLeft = otherObject.BoundingBox.Rectangle.X;
                             int otherRight = otherObject.BoundingBox.Rectangle.X + otherObject.BoundingBox.Rectangle.Width;
                             int otherTop = otherObject.BoundingBox.Rectangle.Y;

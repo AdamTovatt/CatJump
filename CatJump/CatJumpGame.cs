@@ -35,7 +35,7 @@ namespace CatJump
             pixel = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             pixel.SetData(new[] { Color.White });
 
-            world = new World();
+            world = new World(Content, ScreenWidth, ScreenHeight, 2);
             world.DrawDebug = false;
 
             base.Initialize();
@@ -49,11 +49,10 @@ namespace CatJump
 
             IsMouseVisible = false;
 
-            player = new Dog(Content, new Vector2(100, 100));
+            player = new Dog(Content, new Vector2(ScreenWidth / 2, 100));
             world.AddObject(player);
-            world.AddObject(new Block(Content, new Vector2(80, 300)));
-            world.AddObject(new Block(Content, new Vector2(200, 350)));
-            world.AddObject(new Block(Content, new Vector2(600, 200)));
+            world.AddObject(new Block(Content, new Vector2(player.Position.X, 150)));
+            world.UpdateBlocks(player.Position.Y);
         }
 
         protected override void Update(GameTime gameTime)
@@ -61,10 +60,10 @@ namespace CatJump
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            foreach (GameObject gameObject in world.Objects)
+            for (int i = 0; i < world.Objects.Count; i++)
             {
-                gameObject.Update(gameTime);
-                gameObject.CustomUpdate(gameTime);
+                world.Objects[i].Update(gameTime);
+                world.Objects[i].CustomUpdate(gameTime);
             }
 
             camera.Follow(player);
@@ -78,8 +77,10 @@ namespace CatJump
 
             _spriteBatch.Begin(transformMatrix: camera.Transform);
 
-            foreach (GameObject gameObject in world.Objects)
+            for (int i = 0; i < world.Objects.Count; i++)
             {
+                GameObject gameObject = world.Objects[i];
+
                 if (gameObject.Visible)
                 {
                     _spriteBatch.Draw(gameObject.CurrentSprite, gameObject.SpritePosition, Color.White);
