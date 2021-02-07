@@ -103,7 +103,7 @@ namespace CatJump
                 }
             }
 
-            Desktop.Render();
+            //Desktop.Render();
 
             _spriteBatch.End();
 
